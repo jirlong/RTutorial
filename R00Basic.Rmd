@@ -1,0 +1,48 @@
+---
+title: "R00Basic"
+author: "Jilung Hsieh"
+date: "2018/3/6"
+output: 
+  html_document:
+    keep_md: true
+    number_sections: true
+    toc: true    
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  fig.path = "figs/"
+)
+```
+
+* Slide: https://docs.google.com/presentation/d/e/2PACX-1vRjb_W1Vo9-zD9F4FmWOiB6K4ezkF6W64OKcX7bZD6ordKvOT-6LFoGi0le-HzT2ABKudDNhr_qKt2x/pub?start=false&loop=false&delayms=3000&slide=id.g2074c710b4_0_293
+
+# Installing and loading packages
+```{r}
+# install.packages("tidyverse")
+```
+
+# Reading data
+
+```{r}
+load(url("http://varianceexplained.org/files/trump_tweets_df.rda"))
+head(trump_tweets_df, 3)
+names(trump_tweets_df)
+
+
+library(jsonlite)
+library(httr)
+
+url <- "https://www.dcard.tw/_api/forums/relationship/posts?popular=true"
+res <- fromJSON(content(GET(url), "text"))
+head(res, 3)
+names(res)
+
+fburl <- 
+	"https://graph.facebook.com/v2.10/DoctorKoWJ?fields=posts&access_token=188730144854871|1lL4a4CTRymAHvoKxnJDQqvqVdc"
+
+res <- fromJSON(content(GET(fburl), "text"))
+head(res$posts$data, 3)
+names(res$posts$data)
+```
+
