@@ -1,0 +1,75 @@
+---
+title: "R35-Naive Bayes Classification"
+output: 
+  html_notebook: 
+    code_folding: hide
+    fig_caption: yes
+    highlight: tango
+    theme: united
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Source
+* Blogger's instruction with R
+    * https://www.r-bloggers.com/naive-bayes-classification-in-r-part-1/
+    * https://www.r-bloggers.com/naive-bayes-classification-in-r-part-2/
+* Well-known cases
+    * Breast cancer data sourced from Matjaz Zwitter and Milan Soklic from the Institute of Oncology, University Medical Center in Ljubljana, Slovenia (formerly Yugoslavia)
+    
+# 機率基礎 － 獨立與互斥
+* 先談機率的特性。兩個事件的發生有兩種特性，一種是獨立或不獨立（Independent/dependent）、一種是互斥（Mutual exclusive）。過去50天內，我開車上班一共有24次遲到，那麼我遲到的機率就是0.54，這稱為Observational Probability。
+
+* $P(late) = 25/50  = 0.5(50\%)$
+
+* 欲計算兩個事件發生的機率，機率的乘法用來計算兩個事件獨立與否，而加法則是用來計算兩個事件互斥與否。比方說，我今天遲到（0.5）和今天有外賓來訪的機率（0.1）應該是相互獨立的。那麼就用簡單乘法（simple multiplication rule）將兩個機率相乘即可。
+
+* $P(late \bigcap visitor) = 25/50 \times 3/30  = 0.10 (10\%)$
+
+* 如果兩個事件是相依（dependent），那麼就必須要使用條件機率。例如我遲到的機率和壞天氣的機率。注意，條件機率P(Ilate/Weatherbad)的意思並非相除，而為條件機率的代號。最容易理解的例子是發牌，比方說，不計花色，我拿到一張Ace和一張King的機率為0.6%。
+
+    * $P(I_{late} \bigcap Weather_{bad}) = P(I_{late}) \times P(I_{late}/Weather_{bad})$
+    * $P(Ace \bigcap King) = P(Ace) \times P(Ace/King) = 4/52 \times 4/51 = 0.00604 (0.6%)$
+
+* 注意的是，拿到兩張牌的機率並不是互斥的，所謂的互斥是這兩種情形不會同時出現，而拿到兩張牌的機率是有的，所以不是互斥的；但如果是擲骰子的話，擲到1就不會擲出2至6，那麼就單顆骰子而言是互斥的。所以，骰子擲6或3的機率是0.33。
+
+    * $P(6 \bigcup 3) = P(6) + P(3) = 0.33 (33\%)$
+
+* 但如果不是互斥的話，那代表這兩件事情可能都成立，如果我想計算我遲到或有外賓來訪的機率為何的話，那就會是
+
+    * $P (Late \bigcup Visitor) = P(Late) + P(Visitor) - P(Late \bigcap Visitor) =P(Late) + P(Visitor) - P(Late) \times P(Visitor)$
+
+
+
+
+# Naive Bayes Equation
+* Posteriori Probability比較像是我現在知道某個事情的特徵，但我不知道他會不會怎樣，而Likelihood比較像是從已知資料中推機率，例如已經有五個會購買的人，有多少人是女性。所以等號右邊為已知的機率，左邊為未知的機率。整體概念類似
+
+* $posterior=prior×likelihood/evidence$
+* $P(C | X) = P(C) \times P(X | C) / P(X)$
+    * $P(C | X): postriori Probability$
+    * $P(C): class prior probability$
+    * $P(X | C): Likelihood$
+    * $P(C): predictor probability$
+* 以下為推導方法：
+    * $P(X \bigcap C) = P(X) \times P(C | X)$
+    * $P(C | X) = P(X \bigcap C) / P(X)  \because P(X \bigcap C) = P(C) \times P(X | C)$
+    * $P(C | X) = P(C) \times P(X | C) / P(X)$
+    * $P(X) \times P(C | X) = P(C) \times P(X | C)$
+* 如果轉成預測的文字說明的話如以下：
+    * $P(outcome | evidence) = P(outcome) \times P(evidence | outcome) / P(evidence)$
+* 為何會說是Naive是因為我們假設每個屬性間是相互獨立的，但事實上可能不是獨立的。
+
+# Calculating Naive Classier by hand
+
+* 考慮以下的例子，根據以下資料，假設你打算判斷新進樣本X「女性、年齡介於31~40之間、上班族、月收入中等者」，會不會辦信用卡(http://mropengate.blogspot.tw/2015/06/ai-ch14-3-naive-bayes-classifier.html)。
+* ![](http://4.bp.blogspot.com/-NvvaRQWjvn4/VYFkF_liGII/AAAAAAAAxOQ/YqYmnkyxXGc/s1600/5-7-3.jpg)
+
+* 那麼我要分別計算兩個機率，會辦卡$P(Yes/(Age \bigcap Sex \bigcap Occupation \bigcap Income)$和不會辦$P(No/(Age \bigcap Sex \bigcap Occupation \bigcap Income)$的機率。
+
+    * $P(Yes/(Age \bigcap Sex \bigcap Occupation \bigcap Income) = P(會) \times P(Age/Yes) \times P(F/Yes) \times P(Office/Yes) \times P(Middle/Yes)$
+    * $P(No/(Age \bigcap Sex \bigcap Occupation \bigcap Income)$
+* 在計算後，會辦卡的機率為0.0111，小於不會辦卡的機率0.01875，所以可預測不會辦卡的機率比較高（但顯然這方法如果遇到零值就非常麻煩？）。

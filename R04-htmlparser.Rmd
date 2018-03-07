@@ -1,0 +1,33 @@
+---
+title: "R04-HTML Parser"
+output: 
+  html_notebook: 
+    code_folding: hide
+    fig_caption: yes
+    highlight: tango
+    theme: united
+    toc: yes
+---
+
+## 使用XPath
+
+## 爬蟲的小技巧
+
+### 怎麼抓取節點中的文字而不抓子節點？
+當在爬PTT、ChinaTimes、UDN的文章時，因一則文章中除了會包含數個段落，也包含回文或圖片的資料，會發現在目標`<div>`底下還有其他子節點包著CSS或Javascript，但文章內容也同時在該目標`<div>`底下。Python的`beautifalsoup`套件把這種沒有被tag所封裝的文字稱為`NavigableString`。R在處理的時候，可以直接用用以下的xpath
+的`text()`來達成。
+
+```{block, type='raw'}
+content <- html_text(html_nodes(doc,  
+xpath = '//*[@id="dvContainer"]/text()'))
+```
+
+
+```{r message=FALSE, warning=FALSE}
+library(rvest)
+input_string <- "<div><h3>h3 title</h3>following content</div>"
+read_html(input_string) %>%
+    html_node(xpath = "*//div/text()") %>%
+    html_text()
+```
+

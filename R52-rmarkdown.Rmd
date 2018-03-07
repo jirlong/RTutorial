@@ -1,0 +1,56 @@
+---
+title: "R52-R Markdown"
+output: 
+  html_notebook: 
+    code_folding: hide
+    fig_caption: yes
+    highlight: tango
+    theme: united
+    toc: yes
+---
+
+
+# Math equation by markdown+
+* Math in Markdown refernece:http://csrgxtu.github.io/2015/03/20/Writing-Mathematic-Fomulars-in-Markdown/
+
+* Sample Markdown for math http://www.statpower.net/Content/310/R%20Stuff/SampleMarkdown.html
+
+# R notebook
+
+```
+title: "4_2_parseHTML"
+output:
+  html_notebook:
+    number_sections: true
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    fig_width: 8
+    fig_height: 4
+    fig_caption: true
+    theme: united
+    highlight: tango
+```
+
+# github R markdown with figures
+
+* 參考連結：https://stackoverflow.com/questions/39814916/how-can-i-see-output-of-rmd-in-github
+* 方法一：不要用`output: html_document`改成用`output: rmarkdown::github_document`
+* 方法二：用下列的寫法會同時產生html_document和.md檔
+
+```
+output: 
+  html_document:
+    keep_md: true
+```
+
+* Option：用下列的方法可以把.md檔會出現的圖檔存到指定的資料夾。
+
+```
+{r, echo = FALSE}
+    knitr::opts_chunk$set(
+    fig.path = "figs/README-"
+)
+```
+

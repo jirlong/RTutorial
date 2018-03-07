@@ -1,12 +1,14 @@
 ---
-title: "R00Basic"
+title: "R01-R Basic"
 author: "Jilung Hsieh"
 date: "2018/3/6"
 output: 
-  html_document:
-    keep_md: true
-    number_sections: true
-    toc: true    
+  html_notebook: 
+    code_folding: hide
+    fig_caption: yes
+    highlight: tango
+    theme: united
+    toc: yes   
 ---
 
 ```{r, echo = FALSE}
